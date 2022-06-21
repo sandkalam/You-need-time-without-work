@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+    />
+    <title>Number to Whatsapp</title>
+  </head>
+  <body>
+    <main>
+      <section class="container">
+        <h1 class="h1">Number to Whatsapp</h1>
+        <form action="" id="fnum">
+          <div class="number mb-3">
+            <label for="num">Phone Number :</label>
+            <input
+              type="text"
+              id="num"
+              name="num"
+              class="form-control"
+              placeholder="Enter The number Ex. 0891234567"
+            />
+          </div>
+          <div class="name mb-3">
+            <label for="name">Name :</label>
+            <input
+              type="text"
+              name="name"
+              class="form-control"
+              id="name"
+              placeholder="Enter The name Ex. John Doe"
+            />
+          </div>
+          <div class="message mb-3">
+            <label for="message">Message :</label>
+            <select name="mess" class="form-select form-select mb-3" id="Mess">
+              <option value="Default">Default</option>
+              <option value="Custom">Custom</option>
+            </select>
+            <textarea
+              name="message"
+              class="form-control"
+              id="message"
+              cols="30"
+              rows="10"
+            ></textarea>
+          </div>
+          <div class="dates mb-3" id="dates">
+            <label for="date">Date :</label>
+            <input type="date" name="date" class="form-control" id="date" />
+          </div>
+          <div class="submit mb-3">
+            <input type="submit" class="btn btn-primary mb-3" value="Convert" />
+          </div>
+        </form>
+        <div class="result">
+          <h2 class="h2">Result</h2>
+          <div class="result-box">
+            <span id="isi"></span>
+            <div class="result-box-header">
+              <h3 class="h3">Whatsapp Link</h3>
+            </div>
+            <div class="result-box-body">
+              <p class="p">
+                <a
+                  href=""
+                  id="link"
+                  style="word-wrap: break-word"
+                  target="_blank"
+                ></a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.3/moment-with-locales.min.js"
+      integrity="sha512-vFABRuf5oGUaztndx4KoAEUVQnOvAIFs59y4tO0DILGWhQiFnFHiR+ZJfxLDyJlXgeut9Z07Svuvm+1Jv89w5g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"></script>
+    <script>
+      document.getElementById("num").focus();
+      moment.locale("id");
+      document.getElementById("message").style.display = "none";
+      document.onchange = function (e) {
+        if (e.target.id == "Mess") {
+          if (e.target.value == "Custom") {
+            document.getElementById("message").style.display = "block";
+            document.getElementById("message").placeholder = `Selamat Siang ${
+              document.getElementById("name").value
+            }`;
+            document.getElementById("dates").style.display = "none";
+          } else {
+            document.getElementById("dates").style.display = "block";
+            document.getElementById("message").style.display = "none";
+          }
+        }
+      };
+
+      document.getElementById("fnum").addEventListener("submit", function (e) {
+        e.preventDefault();
+        var num = document.getElementById("num").value;
+
+        num = num.replace(/^0/, "62");
+        var result = "https://api.whatsapp.com/send?phone=" + num;
+
+        var name = document.getElementById("name").value;
+        var mess = document.getElementById("message").value;
+        var mess2 = document.getElementById("Mess").value;
+        var date = document.getElementById("date").value;
+        var tgl = moment(date).format("dddd, D MMMM YYYY");
+
+        if (mess2 == "Custom") {
+          result += "&text=" + mess;
+        } else {
+          var pesan = `Selamat siang
+Kami dari PT. Multikarya Garmentextindo. Berdasarkan Lamaran yang telah kami terima, Kami memberitahukan bahwa saudara *${name}* Diminta kehadirannya pada :
+
+Hari : ${tgl}
+Jam : 08:00
+
+Untuk Langsung bertemu Ibu Widi (HRD)`;
+
+          document.getElementById("isi").innerHTML = pesan;
+          var pesanenc = encodeURI(pesan);
+          result += "&text=" + pesanenc;
+        }
+
+        document.getElementById("link").href = result;
+        document.getElementById("link").innerHTML = result;
+      });
+    </script>
+  </body>
+</html>
